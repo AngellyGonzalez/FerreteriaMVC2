@@ -5,15 +5,14 @@
         <group>
             <file>file:/C:/Users/HP%2017-CN0/Documents/NetBeansProjects/FerreteriaMVC2/src/DAO/UsuarioDAO.java</file>
             <file>file:/C:/Users/HP%2017-CN0/Documents/NetBeansProjects/FerreteriaMVC2/src/DAO/VentaDAO.java</file>
-            <file>file:/C:/Users/HP%2017-CN0/Documents/NetBeansProjects/FerreteriaMVC2/src/Util/ConexionBD.java</file>
             <file>file:/C:/Users/HP%2017-CN0/Documents/NetBeansProjects/FerreteriaMVC2/src/DAO/ProductoDAO.java</file>
+            <file>file:/C:/Users/HP%2017-CN0/Documents/NetBeansProjects/FerreteriaMVC2/src/Util/ConexionBD.java</file>
             <file>file:/C:/Users/HP%2017-CN0/Documents/NetBeansProjects/FerreteriaMVC2/src/DAO/EmpleadoDAO.java</file>
             <file>file:/C:/Users/HP%2017-CN0/Documents/NetBeansProjects/FerreteriaMVC2/src/DAO/DetalleCompraDAO.java</file>
             <file>file:/C:/Users/HP%2017-CN0/Documents/NetBeansProjects/FerreteriaMVC2/src/DAO/DetalleVentaDAO.java</file>
             <file>file:/C:/Users/HP%2017-CN0/Documents/NetBeansProjects/FerreteriaMVC2/src/DAO/CompraDAO.java</file>
-            <file>file:/C:/Users/HP%2017-CN0/Documents/NetBeansProjects/FerreteriaMVC2/src/DAO/CategoriaDAO.java</file>
             <file>file:/C:/Users/HP%2017-CN0/Documents/NetBeansProjects/FerreteriaMVC2/src/DAO/ClienteDAO.java</file>
-            <file>file:/C:/Users/HP%2017-CN0/Documents/NetBeansProjects/FerreteriaMVC2/src/Modelo/DetalleVenta.java</file>
+            <file>file:/C:/Users/HP%2017-CN0/Documents/NetBeansProjects/FerreteriaMVC2/src/DAO/CategoriaDAO.java</file>
         </group>
     </open-files>
 </project-private>

@@ -3,23 +3,26 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package DAO;
+
 import Modelo.Empleado;
 import Util.ConexionBD;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import  java.sql.SQLException; 
+import java.sql.SQLException;
 import java.util.Date;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+
 /**
  *
  * @author HP 17-CN0
  */
 public class EmpleadoDAO {
+
     public void crearEmpleado(Empleado empleado) throws SQLException {
-    String sql = """
+        String sql = """
         INSERT INTO Empleados (
             primer_nombre, 
             segundo_nombre, 
@@ -29,27 +32,24 @@ public class EmpleadoDAO {
             cargo, 
             fecha_contratacion
         ) VALUES (?, ?, ?, ?, ?, ?, ?)""";
-    
-    try (Connection c = ConexionBD.getConnection();
-         PreparedStatement stmt = c.prepareStatement(sql)) {
-        stmt.setString(1, empleado.getPrimerNombre());
-        stmt.setString(2, empleado.getSegundoNombre());
-        stmt.setString(3, empleado.getPrimerApellido());
-        stmt.setString(4, empleado.getSegundoApellido());
-        stmt.setString(5, empleado.getCelular());
-        stmt.setString(6, empleado.getCargo());
-        stmt.setDate(7, new java.sql.Date(empleado.getFechaContratacion().getTime()));
-        stmt.executeUpdate();
+
+        try (Connection c = ConexionBD.getConnection(); PreparedStatement stmt = c.prepareStatement(sql)) {
+            stmt.setString(1, empleado.getPrimerNombre());
+            stmt.setString(2, empleado.getSegundoNombre());
+            stmt.setString(3, empleado.getPrimerApellido());
+            stmt.setString(4, empleado.getSegundoApellido());
+            stmt.setString(5, empleado.getCelular());
+            stmt.setString(6, empleado.getCargo());
+            stmt.setDate(7, new java.sql.Date(empleado.getFechaContratacion().getTime()));
+            stmt.executeUpdate();
+        }
     }
-}
-    
-      public List<Empleado> leerTodosEmpleados() throws SQLException {
+
+    public List<Empleado> leerTodosEmpleados() throws SQLException {
         String sql = "SELECT * FROM Empleados";
         List<Empleado> empleados = new ArrayList<>();
 
-        try (Connection c = ConexionBD.getConnection();
-             PreparedStatement stmt = c.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+        try (Connection c = ConexionBD.getConnection(); PreparedStatement stmt = c.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 Empleado empleado = new Empleado();
                 empleado.setIdEmpleado(rs.getInt("id_empleado"));
@@ -66,23 +66,54 @@ public class EmpleadoDAO {
         return empleados;
     }
 
-public static void main(String[] args) {
-    try {
-        EmpleadoDAO dao = new EmpleadoDAO();
-          
+    // Método para actualizar un empleado
+    public void actualizarEmpleado(Empleado empleado) throws SQLException {
+        String sql = "UPDATE Empleados SET primer_nombre = ?, segundo_nombre = ?, primer_apellido = ?, segundo_apellido = ?, celular = ?, cargo = ?, fecha_contratacion = ? WHERE id_empleado = ?";
+
+        try (Connection c = ConexionBD.getConnection(); PreparedStatement stmt = c.prepareStatement(sql)) {
+            stmt.setString(1, empleado.getPrimerNombre());
+            stmt.setString(2, empleado.getSegundoNombre());
+            stmt.setString(3, empleado.getPrimerApellido());
+            stmt.setString(4, empleado.getSegundoApellido());
+            stmt.setString(5, empleado.getCelular());
+            stmt.setString(6, empleado.getCargo());
+            stmt.setDate(7, new java.sql.Date(empleado.getFechaContratacion().getTime()));
+            stmt.setInt(8, empleado.getIdEmpleado());
+            stmt.executeUpdate();
+        }
+    }
+
+// Método para eliminar un empleado
+    public void eliminarEmpleado(int idEmpleado) throws SQLException {
+        String sql = "DELETE FROM Empleados WHERE id_empleado = ?";
+
+        try (Connection c = ConexionBD.getConnection(); PreparedStatement stmt = c.prepareStatement(sql)) {
+            stmt.setInt(1, idEmpleado);
+            stmt.executeUpdate();
+        }
+    }
+
+    public static void main(String[] args) {
+        try {
+            EmpleadoDAO dao = new EmpleadoDAO();
+
+            // Eliminar un empleado
+            dao.eliminarEmpleado(2); // ID a eliminar
+            System.out.println("Empleado eliminado.");
+
             List<Empleado> empleados = dao.leerTodosEmpleados();
             System.out.println("Lista de empleados:");
             for (Empleado emp : empleados) {
-                System.out.println("ID: " + emp.getIdEmpleado() + 
-                                 ", Nombre: " + emp.getPrimerNombre() + " " + emp.getSegundoNombre() + 
-                                 " " + emp.getPrimerApellido() + " " + emp.getSegundoApellido() + 
-                                 ", Celular: " + emp.getCelular() + 
-                                 ", Cargo: " + emp.getCargo() + 
-                                 ", Fecha Contratación: " + emp.getFechaContratacion());
+                System.out.println("ID: " + emp.getIdEmpleado()
+                        + ", Nombre: " + emp.getPrimerNombre() + " " + emp.getSegundoNombre()
+                        + " " + emp.getPrimerApellido() + " " + emp.getSegundoApellido()
+                        + ", Celular: " + emp.getCelular()
+                        + ", Cargo: " + emp.getCargo()
+                        + ", Fecha Contratación: " + emp.getFechaContratacion());
             }
-    } catch (SQLException e) {
-        System.err.println("Error: " + e.getMessage());
+        } catch (SQLException e) {
+            System.err.println("Error: " + e.getMessage());
+        }
     }
-}
 
 }
