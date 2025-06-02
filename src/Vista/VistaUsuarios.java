@@ -3,18 +3,48 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 package Vista;
-
+import Controlador.UsuarioControlador;
+import Modelo.Categoria;
+import Modelo.Usuario;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author HP 17-CN0
  */
 public class VistaUsuarios extends javax.swing.JPanel {
 
+    private final UsuarioControlador usuarioControlador;
+    private Integer idUsuarioSeleccionada = null;
     /**
      * Creates new form VistaUsuarios
      */
     public VistaUsuarios() {
         initComponents();
+           this.usuarioControlador= new UsuarioControlador();
+cargarDatosTabla();
+    }
+    
+        private void cargarDatosTabla (){
+        // Obtener todas las categorias del controlador
+        List<Usuario> usuarios = usuarioControlador.obtenerTodosUsuarios();
+        
+        if (usuarios != null) {
+            //Obtener el modelo existente de la tabla 
+            DefaultTableModel model= (DefaultTableModel) tablausuarios.getModel();
+            //Limpiar las filas existentes 
+            model.setRowCount(0);
+            
+            //Llenar las filas con los datos categorias
+            for (Usuario cat : usuarios) {
+                Object[] row = {
+                    cat.getIdUsuario(),
+                    cat.getUsuario(),
+                    cat.getContrasena()
+                };
+                model.addRow(row);
+            }
+        }
     }
 
     /**
@@ -53,49 +83,70 @@ public class VistaUsuarios extends javax.swing.JPanel {
 
         jLabel3.setText("Contraseña");
 
+        textBuscar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                textBuscarKeyTyped(evt);
+            }
+        });
+
         btnGuardar.setText("Guardar");
         btnGuardar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnGuardarActionPerformed(evt);
-                btnGuardaraccionBotonGuardar(evt);
+                accionBotonGuardar(evt);
             }
         });
 
         btnEliminar.setText("Eliminar");
         btnEliminar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEliminaraccionBotonEliminar(evt);
+                accionBotonEliminar(evt);
             }
         });
 
         btnActualizar.setText("Actualizar");
         btnActualizar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnActualizarActionPerformed(evt);
-                btnActualizaraccionBotonActualizar(evt);
+                accionBotonActualizar(evt);
             }
         });
 
         tablausuarios.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null}
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
             },
             new String [] {
-                "Usuario", "Contraseña"
+                "ID Usuario", "Usuario", "Contraseña"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tablausuarios.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaUsuarioMouseClicked(evt);
+            }
         });
         jScrollPane1.setViewportView(tablausuarios);
+        if (tablausuarios.getColumnModel().getColumnCount() > 0) {
+            tablausuarios.getColumnModel().getColumn(0).setResizable(false);
+            tablausuarios.getColumnModel().getColumn(1).setResizable(false);
+            tablausuarios.getColumnModel().getColumn(2).setResizable(false);
+        }
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -164,28 +215,95 @@ public class VistaUsuarios extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_textContraseñaActionPerformed
 
-    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+    private void accionBotonGuardar(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_accionBotonGuardar
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnGuardarActionPerformed
+              String usuario = textUsuario.getText();
+        String contrasena = textContraseña.getText();
+        
+        if (!usuario.isEmpty()&& !contrasena.isEmpty()) {
+            usuarioControlador.crearUsuario(usuario, contrasena);
+            cargarDatosTabla();
+            textUsuario.setText("");
+            textContraseña.setText("");
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Por favor, llene todos los campos,", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_accionBotonGuardar
 
-    private void btnGuardaraccionBotonGuardar(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardaraccionBotonGuardar
+    private void accionBotonEliminar(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_accionBotonEliminar
         // TODO add your handling code here:
+            int filaSeleccionada = tablausuarios.getSelectedRow();
+        if (filaSeleccionada != -1) {
+            int idUsuario = (int) tablausuarios.getValueAt(filaSeleccionada, 0);
+           usuarioControlador.eliminarUsuario(idUsuario);
+            cargarDatosTabla();
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Selecciona una fila para eleiminar.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE); 
+        }  
+    }//GEN-LAST:event_accionBotonEliminar
 
-    }//GEN-LAST:event_btnGuardaraccionBotonGuardar
-
-    private void btnEliminaraccionBotonEliminar(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminaraccionBotonEliminar
+    private void tablaUsuarioMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaUsuarioMouseClicked
         // TODO add your handling code here:
+           if (evt.getClickCount()== 2) {
+            int filaSeleccionada = tablausuarios.getSelectedRow();
+            if (filaSeleccionada != -1) {
+                int idUsuarioSeleccionada = (int) tablausuarios.getValueAt(filaSeleccionada, 0);
+                String usuario= (String) tablausuarios.getValueAt(filaSeleccionada, 1);
+                String contraseña = (String) tablausuarios.getValueAt(filaSeleccionada, 2);
+                
+                textUsuario.setText(usuario);
+                textContraseña.setText(contraseña);
+                
+                btnEliminar.setEnabled(false);
+                btnGuardar.setEnabled(false);
+            }
+        }
+    }//GEN-LAST:event_tablaUsuarioMouseClicked
 
-    }//GEN-LAST:event_btnEliminaraccionBotonEliminar
-
-    private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
+    private void accionBotonActualizar(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_accionBotonActualizar
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnActualizarActionPerformed
+             String usuario = textUsuario.getText();
+        String contraseña = textContraseña.getText();
+        
+        if (idUsuarioSeleccionada != null && !usuario.isEmpty() && !contraseña.isEmpty()) { 
+            
+          usuarioControlador.actualizarUsuario(idUsuarioSeleccionada, usuario, contraseña);
+            cargarDatosTabla();
+            
+            textUsuario.setText("");
+            textContraseña.setText("");
+            idUsuarioSeleccionada = null;
+            
+           btnEliminar.setEnabled(true);
+           btnGuardar.setEnabled(true);
+        }else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Por favor, llene todos los campos.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_accionBotonActualizar
 
-    private void btnActualizaraccionBotonActualizar(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizaraccionBotonActualizar
+    private void textBuscarKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_textBuscarKeyTyped
         // TODO add your handling code here:
-
-    }//GEN-LAST:event_btnActualizaraccionBotonActualizar
+                   String textoBusqueda = textBuscar.getText().trim().toLowerCase();
+        List<Usuario> usuarios = usuarioControlador.obtenerTodosUsuarios();
+        
+        DefaultTableModel modelo = (DefaultTableModel) tablausuarios.getModel();
+        modelo.setRowCount(0);
+        
+        if (usuarios!= null) {
+            for (Usuario cat : usuarios) {
+                if (textoBusqueda.isEmpty()|| 
+                   cat.getUsuario().toLowerCase().contains(textoBusqueda)||
+                   cat.getContrasena().toLowerCase().contains(textoBusqueda)){  
+                         Object[] fila = {
+                        cat.getIdUsuario(),
+                        cat.getUsuario(),
+                        cat.getContrasena()
+                    };
+                    modelo.addRow(fila);
+                }
+            }
+        }
+    }//GEN-LAST:event_textBuscarKeyTyped
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
